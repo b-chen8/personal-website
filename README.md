@@ -2,7 +2,7 @@
 
 Benson Chen's portfolio: a single page built with Next.js (App Router), TypeScript and Tailwind CSS.
 
-**Live site:** https://personal-website-dusky-nu-61.vercel.app
+**Live site:** https://personal-website-benson-chen.vercel.app
 
 The site is hosted on Vercel, and every push to the `main` branch redeploys it.
 
