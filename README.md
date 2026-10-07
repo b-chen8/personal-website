@@ -1,6 +1,10 @@
 # Personal website
 
-Benson Chen's portfolio: a single page built with Next.js (App Router), TypeScript and Tailwind CSS, deployed on Vercel.
+Benson Chen's portfolio: a single page built with Next.js (App Router), TypeScript and Tailwind CSS.
+
+**Live site:** https://personal-website-dusky-nu-61.vercel.app
+
+The site is hosted on Vercel, and every push to the `main` branch redeploys it.
 
 ## Run it locally
 
@@ -44,10 +48,3 @@ To update the resume, replace `public/anonResume.pdf`. To use a file with a diff
 | `components/icons.tsx` | The inline SVG icons. |
 
 Only `Nav.tsx` and `ThemeToggle.tsx` run JavaScript in the browser. Everything else is rendered to static HTML at build time.
-
-## Deploy
-
-1. Push this folder to a GitHub repository.
-2. Import the repository at https://vercel.com/new. Vercel detects Next.js; no settings or environment variables are needed.
-
-After that, every push to the main branch redeploys the site.
