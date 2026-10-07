@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* Adds a `light:` variant (e.g. `light:hidden`). Dark is the default theme,
+   so plain classes describe dark mode and `light:` overrides them. */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+/* Color tokens. Dark is a blackboard: slate, chalk white, chalk yellow. */
+:root {
+  color-scheme: dark;
+  --bg: #131c1f;
+  --surface: #1a2529;
+  --line: #2d3d42;
+  --fg: #e8edea;
+  --muted: #9db0ae;
+  --accent: #f2c866;
+  --on-accent: #131c1f;
+}
+
+/* Light is paper and ink. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f8f7;
+  --surface: #ffffff;
+  --line: #d3dcda;
+  --fg: #16242a;
+  --muted: #51636a;
+  --accent: #1f4fbf;
+  --on-accent: #ffffff;
+}
+
+/* Exposes the tokens to Tailwind as bg-bg, text-muted, border-line, etc. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-stix), Georgia, "Times New Roman", serif;
+}
+
+@layer base {
+  html {
+    /* Keeps section headings clear of the sticky nav when jumping to them. */
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+/* Hero plot: each curve draws itself once on page load. Curves are fully
+   visible by default, so nothing is hidden if motion is turned off. */
+@media (prefers-reduced-motion: no-preference) {
+  .plot-line {
+    stroke-dasharray: 1;
+    animation: plot-draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+    animation-delay: var(--delay, 0s);
+  }
+}
+
+@keyframes plot-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
