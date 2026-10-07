@@ -1,18 +1,21 @@
 // The hero figure: sin x and its Taylor polynomials of degree 1 to 9.
 // Everything is computed here on the server and sent as plain SVG, so it
 // costs no client-side JavaScript. The draw-on animation is in globals.css.
+//
+// The geometry below is exported so app/opengraph-image.tsx can draw the same
+// curves in the link-preview image.
 
-const WIDTH = 520;
-const HEIGHT = 340;
+export const WIDTH = 520;
+export const HEIGHT = 340;
 const X_RANGE = 2 * Math.PI; // the plot runs from -2π to 2π
 const Y_RANGE = 2.4;
-const DEGREES = [1, 3, 5, 7, 9];
+export const DEGREES = [1, 3, 5, 7, 9];
 
-const toX = (x: number) => ((x + X_RANGE) / (2 * X_RANGE)) * WIDTH;
-const toY = (y: number) => HEIGHT / 2 - (y / Y_RANGE) * (HEIGHT / 2);
+export const toX = (x: number) => ((x + X_RANGE) / (2 * X_RANGE)) * WIDTH;
+export const toY = (y: number) => HEIGHT / 2 - (y / Y_RANGE) * (HEIGHT / 2);
 
 // x - x^3/3! + x^5/5! - ... up to the given degree.
-function taylorSin(x: number, degree: number) {
+export function taylorSin(x: number, degree: number) {
   let term = x;
   let sum = x;
   for (let k = 3; k <= degree; k += 2) {
@@ -22,7 +25,7 @@ function taylorSin(x: number, degree: number) {
   return sum;
 }
 
-function curvePath(f: (x: number) => number) {
+export function curvePath(f: (x: number) => number) {
   const steps = 200;
   // Polynomials shoot off to huge values; cap them just outside the frame.
   const limit = Y_RANGE * 1.2;

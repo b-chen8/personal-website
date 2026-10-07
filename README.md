@@ -28,7 +28,7 @@ To update the resume, replace `public/anonResume.pdf`. To use a file with a diff
 
 ## Change the look
 
-- **Colors:** the tokens at the top of [app/globals.css](app/globals.css). `:root` is dark mode, which is the default, and `[data-theme="light"]` is light mode. Components use these through Tailwind classes such as `bg-surface` and `text-muted`, so changing a token changes it everywhere.
+- **Colors:** the tokens at the top of [app/globals.css](app/globals.css). `:root` is dark mode, which is the default, and `[data-theme="light"]` is light mode. Components use these through Tailwind classes such as `bg-surface` and `text-muted`, so changing a token changes it everywhere. The one exception is the link-preview image, which repeats the dark colors in [app/opengraph-image.tsx](app/opengraph-image.tsx).
 - **Fonts:** loaded in [app/layout.tsx](app/layout.tsx). Headings use STIX Two Text (`font-display`), body text uses Schibsted Grotesk.
 - **Section order:** [app/page.tsx](app/page.tsx). If you add or rename a section, update the `links` list in [components/Nav.tsx](components/Nav.tsx) to match.
 
@@ -39,6 +39,7 @@ To update the resume, replace `public/anonResume.pdf`. To use a file with a diff
 | `app/layout.tsx` | Page shell: fonts, page title and description, and a small script that applies a saved theme before the page paints. |
 | `app/page.tsx` | Lists the sections in order. |
 | `app/globals.css` | Color tokens, Tailwind setup, and the hero plot's draw-on animation. |
+| `app/opengraph-image.tsx` | The image shown when the site's link is shared. Generated at build time from the name and tagline in `data/content.ts`, using the font files in `assets/fonts/`. |
 | `components/Nav.tsx` | Sticky nav and the mobile menu. |
 | `components/ThemeToggle.tsx` | Switches `data-theme` on `<html>` and saves the choice in `localStorage`. |
 | `components/Section.tsx` | Layout shared by every section: title in a left margin, content beside it. |
