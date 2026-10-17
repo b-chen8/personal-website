@@ -1,56 +1,77 @@
+import Link from "next/link";
+import { Fragment } from "react";
 import { profile } from "@/data/content";
-import { FileIcon, GitHubIcon } from "./icons";
-import TaylorPlot from "./TaylorPlot";
+import { primaryButton as primary, secondaryButton as secondary } from "./buttons";
+import { FileIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./icons";
+import TaylorExplorer from "./TaylorExplorer";
 
-const button =
-  "inline-flex h-11 items-center gap-2 rounded-md px-5 text-[15px] font-medium transition-colors";
-const primary = `${button} bg-accent text-on-accent hover:opacity-90`;
-const secondary = `${button} border border-line hover:border-muted`;
+const icon = "h-[18px] w-[18px]";
 
 export default function Hero() {
   return (
     <section
       id="top"
       aria-labelledby="hero-heading"
-      className="mx-auto grid max-w-5xl items-center gap-12 px-5 pb-20 pt-16 md:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16 lg:pb-28"
+      className="mx-auto max-w-6xl px-5 pb-20 pt-12 md:pb-24 md:pt-16"
     >
-      <div>
-        <h1
-          id="hero-heading"
-          className="font-display text-5xl leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
-        >
-          {profile.name}
-        </h1>
-        <p className="mt-6 max-w-[40ch] text-lg leading-relaxed text-muted md:text-xl">
-          {profile.tagline}
-        </p>
-        <div className="mt-9 flex flex-wrap gap-3">
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={primary}
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,29rem)] lg:items-end lg:gap-12">
+        <div>
+          <h1
+            id="hero-heading"
+            className="font-display text-[clamp(3.25rem,11vw,6.75rem)] leading-[0.95] tracking-tight"
           >
-            <FileIcon className="h-[18px] w-[18px]" />
-            Resume
-            <span className="sr-only"> (PDF, opens in a new tab)</span>
-          </a>
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={secondary}
-          >
-            <GitHubIcon className="h-[18px] w-[18px]" />
-            GitHub
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          <a href="#contact" className={secondary}>
-            Contact
-          </a>
+            {profile.name}
+          </h1>
+          <p className="mt-7 max-w-[46ch] text-lg leading-relaxed text-muted md:text-xl">
+            {profile.intro}
+          </p>
+        </div>
+
+        <div>
+          <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-2.5 text-[15px] leading-snug">
+            {profile.facts.map((fact) => (
+              <Fragment key={fact.label}>
+                <dt className="text-muted">{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </Fragment>
+            ))}
+          </dl>
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            <Link href="/resume" className={primary}>
+              <FileIcon className={icon} />
+              Resume
+            </Link>
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={secondary}
+            >
+              <GitHubIcon className={icon} />
+              GitHub
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={secondary}
+            >
+              <LinkedInIcon className={icon} />
+              LinkedIn
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a href={`mailto:${profile.email}`} className={secondary}>
+              <MailIcon className={icon} />
+              Email
+            </a>
+          </div>
         </div>
       </div>
-      <TaylorPlot />
+
+      <div className="mt-14 md:mt-16">
+        <TaylorExplorer />
+      </div>
     </section>
   );
 }

@@ -19,33 +19,40 @@ Then open http://localhost:3000. Run `npm run build` before pushing to catch err
 
 Everything the site says lives in [data/content.ts](data/content.ts). No component needs to change when the content does.
 
-- `profile`: name, tagline, About paragraphs, email, GitHub and LinkedIn links.
-- `projects`: one entry per project card. `github`, `demo` and `note` are optional; leave one out and it is not shown.
-- `experience`: one entry per job, shown in the order listed.
+- `profile`: name, the intro paragraph and short facts at the top of the page, email, and links. `tagline` is the page description and the text in the link-preview image.
+- `projects`: one entry per project, in the order shown. `github`, `demo` and `note` are optional; leave one out and it is not shown. `inProgress: true` adds an "In progress" label and introduces `details` as design decisions.
+- `flow` (inside a project, optional): the diagram of how the project's parts connect. Each box has a column and a row, and each arrow names the two boxes it joins; the comments on `FlowNode` and `FlowEdge` explain the rules. On phones the diagram turns on its side automatically.
+- `education`: school, degree, GPA line and coursework.
+- `experience`: software-relevant jobs, with bullet points. `otherWork`: other jobs, one short line each.
 - `skills`: the groups and what is in each.
 
-To update the resume, replace `public/anonResume.pdf`. To use a file with a different name, put it in `public/` and change `profile.resume` to match; the name is case-sensitive once deployed. The file is public once the site is live, so check what it contains.
+To update the resume, replace `public/anonResume.pdf`. To use a file with a different name, put it in `public/` and change `profile.resume` to match; the name is case-sensitive once deployed. The file is public once the site is live, so check what it contains. Every Resume link goes to the `/resume` page, which shows the file inside the site, and its Download PDF button saves it under your name rather than the file's.
 
 ## Change the look
 
-- **Colors:** the tokens at the top of [app/globals.css](app/globals.css). `:root` is dark mode, which is the default, and `[data-theme="light"]` is light mode. Components use these through Tailwind classes such as `bg-surface` and `text-muted`, so changing a token changes it everywhere. The one exception is the link-preview image, which repeats the dark colors in [app/opengraph-image.tsx](app/opengraph-image.tsx).
+- **Colors:** the tokens at the top of [app/globals.css](app/globals.css). `:root` is dark mode, which is the default, and `[data-theme="light"]` is light mode. Components use these through Tailwind classes such as `bg-surface` and `text-muted`, so changing a token changes it everywhere. The exceptions are the link-preview image in [app/opengraph-image.tsx](app/opengraph-image.tsx) and the tab icon in [app/icon.svg](app/icon.svg), which repeat the dark colors.
 - **Fonts:** loaded in [app/layout.tsx](app/layout.tsx). Headings use STIX Two Text (`font-display`), body text uses Schibsted Grotesk.
 - **Section order:** [app/page.tsx](app/page.tsx). If you add or rename a section, update the `links` list in [components/Nav.tsx](components/Nav.tsx) to match.
+- **Hero plot:** the frame, the degrees the slider offers and the intro animation's timing are constants at the top of [components/TaylorExplorer.tsx](components/TaylorExplorer.tsx).
 
 ## How the files fit together
 
 | File | What it does |
 | --- | --- |
-| `app/layout.tsx` | Page shell: fonts, page title and description, and a small script that applies a saved theme before the page paints. |
-| `app/page.tsx` | Lists the sections in order. |
-| `app/globals.css` | Color tokens, Tailwind setup, and the hero plot's draw-on animation. |
+| `app/layout.tsx` | Page shell: fonts, the nav and footer, page title and description, and a small script that applies a saved theme before the page paints. |
+| `app/page.tsx` | The home page. Lists the sections in order. |
+| `app/resume/page.tsx` | The resume page: the PDF shown in the page, a download button, and the contact details the PDF leaves out. |
+| `app/globals.css` | Color tokens, Tailwind setup, the hero plot's animations, the degree slider's styles, the pulses on the project diagrams, and the theme-switch transition. |
 | `app/opengraph-image.tsx` | The image shown when the site's link is shared. Generated at build time from the name and tagline in `data/content.ts`, using the font files in `assets/fonts/`. |
-| `components/Nav.tsx` | Sticky nav and the mobile menu. |
-| `components/ThemeToggle.tsx` | Switches `data-theme` on `<html>` and saves the choice in `localStorage`. |
+| `components/Nav.tsx` | Sticky nav with the Resume link and the mobile menu. Underlines the section you are reading. |
+| `components/ThemeToggle.tsx` | Switches `data-theme` on `<html>` and saves the choice in `localStorage`. Where the browser supports view transitions, the new theme spreads out from the button in a circle. |
 | `components/Section.tsx` | Layout shared by every section: title in a left margin, content beside it. |
-| `components/Hero.tsx` | Name, tagline, and the Resume, GitHub and Contact buttons. |
-| `components/TaylorPlot.tsx` | The hero figure: sin x and its Taylor polynomials, drawn as SVG. |
-| `components/About.tsx`, `Projects.tsx`, `Experience.tsx`, `Skills.tsx`, `Contact.tsx` | One per section. Each reads from `data/content.ts`. |
-| `components/icons.tsx` | The inline SVG icons. |
+| `components/Hero.tsx` | Name, intro, facts, and the Resume, GitHub, LinkedIn and Email buttons. |
+| `components/TaylorExplorer.tsx` | The hero figure: sin x and one of its Taylor polynomials, with the error hatched, a slider for the degree, and a tracer that reads out the error under the pointer. |
+| `lib/taylor.ts` | The math and SVG paths behind the hero figure and the link-preview image. |
+| `components/FlowDiagram.tsx` | Draws a project's `flow` as a grid of boxes and arrows. Hovering it sends dots along the arrows in the direction data moves. |
+| `components/ResumeViewer.tsx` | Shows the resume PDF with the browser's own viewer, or a link to it in browsers that can't (Chrome on Android). |
+| `components/Projects.tsx`, `Education.tsx`, `Experience.tsx`, `Skills.tsx`, `Contact.tsx` | One per section. Each reads from `data/content.ts`. |
+| `components/icons.tsx`, `buttons.ts` | The inline SVG icons, and the button styles the hero and resume page share. |
 
-Only `Nav.tsx` and `ThemeToggle.tsx` run JavaScript in the browser. Everything else is rendered to static HTML at build time.
+Only `Nav.tsx`, `ThemeToggle.tsx`, `TaylorExplorer.tsx` and `ResumeViewer.tsx` run JavaScript in the browser. Everything else is rendered to static HTML at build time, and the hero figure is rendered there too, so the page is complete before any script loads.

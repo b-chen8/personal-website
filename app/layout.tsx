@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Schibsted_Grotesk, STIX_Two_Text } from "next/font/google";
+import Nav from "@/components/Nav";
 import { profile } from "@/data/content";
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       data-theme="dark"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${bodyFont.variable} ${displayFont.variable} h-full antialiased`}
     >
@@ -53,7 +55,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <Nav name={profile.name} />
         {children}
+        <footer className="border-t border-line">
+          <p className="mx-auto max-w-6xl px-5 py-8 text-sm text-muted">
+            © {profile.name}. Built with Next.js and Tailwind CSS.{" "}
+            <a
+              href={profile.source}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-line underline-offset-4 transition-colors hover:text-fg hover:decoration-accent"
+            >
+              Read the source on GitHub
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            .
+          </p>
+        </footer>
       </body>
     </html>
   );

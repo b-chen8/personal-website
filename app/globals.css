@@ -4,27 +4,29 @@
    so plain classes describe dark mode and `light:` overrides them. */
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
-/* Color tokens. Dark is a blackboard: slate, chalk white, chalk yellow. */
+/* Color tokens. Dark is a blueprint: deep Prussian blue, white linework,
+   and amber for anything highlighted. */
 :root {
   color-scheme: dark;
-  --bg: #131c1f;
-  --surface: #1a2529;
-  --line: #2d3d42;
-  --fg: #e8edea;
-  --muted: #9db0ae;
-  --accent: #f2c866;
-  --on-accent: #131c1f;
+  --bg: #0b1e33;
+  --surface: #10273f;
+  --line: #23415f;
+  --fg: #edf2f7;
+  --muted: #93a9c2;
+  --accent: #ffb84d;
+  --on-accent: #0b1e33;
 }
 
-/* Light is paper and ink. */
+/* Light is the same drawing printed on white: the blue becomes the ink, and
+   the amber is darkened so it still reads as text. */
 [data-theme="light"] {
   color-scheme: light;
-  --bg: #f6f8f7;
+  --bg: #f3f6fa;
   --surface: #ffffff;
-  --line: #d3dcda;
-  --fg: #16242a;
-  --muted: #51636a;
-  --accent: #1f4fbf;
+  --line: #d0dae6;
+  --fg: #0b1e33;
+  --muted: #4b6079;
+  --accent: #b35c00;
   --on-accent: #ffffff;
 }
 
@@ -47,6 +49,9 @@
     scroll-padding-top: 5rem;
   }
 
+  /* Smooth only for jumps within a page. data-scroll-behavior="smooth" on
+     <html> (app/layout.tsx) tells Next.js to switch it off while it moves to
+     another page, so a new page opens at the top instead of scrolling there. */
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
@@ -65,13 +70,26 @@
   }
 }
 
-/* Hero plot: each curve draws itself once on page load. Curves are fully
+/* Hero plot (components/TaylorExplorer.tsx). On page load sin x draws itself
+   in, then the polynomial and its shaded error fade in. Everything is fully
    visible by default, so nothing is hidden if motion is turned off. */
 @media (prefers-reduced-motion: no-preference) {
   .plot-line {
     stroke-dasharray: 1;
     animation: plot-draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
     animation-delay: var(--delay, 0s);
+  }
+
+  .plot-fade {
+    animation: plot-fade 0.6s ease-out backwards;
+    animation-delay: var(--delay, 0s);
+  }
+
+  /* Changing the degree morphs the old curve into the new one. Every path
+     has the same number of points, which is what lets the browser blend
+     them. Browsers without CSS `d` support just swap the path. */
+  .taylor-shape {
+    transition: d 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -82,4 +100,150 @@
   to {
     stroke-dashoffset: 0;
   }
+}
+
+@keyframes plot-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The plot has no frame; its grid fades out toward the left and right. */
+.taylor-plot {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+}
+
+/* The degree slider: a thin track, filled with the accent up to the thumb.
+   --fill is set from the current degree in TaylorExplorer.tsx. */
+.degree-slider {
+  appearance: none;
+  height: 1.75rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.degree-slider::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--fill),
+    var(--line) var(--fill)
+  );
+}
+
+.degree-slider::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--fill),
+    var(--line) var(--fill)
+  );
+}
+
+.degree-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -8.5px;
+  border: 4px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+
+.degree-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 4px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+
+/* Project flow diagrams (components/FlowDiagram.tsx). Hovering a diagram
+   sends a dot along each arrow. One hop takes 0.9s and a cycle has room for
+   three; --pulse-delay holds back arrows that leave later columns. The dots
+   stay hidden when motion is turned off. */
+.flow-pulse {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 0 12px var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flow-pulse-right {
+  top: 50%;
+  left: 0;
+  margin-top: -3.5px;
+}
+
+.flow-pulse-down {
+  top: 0;
+  left: 50%;
+  margin-left: -3.5px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .group\/flow:hover .flow-pulse-right {
+    animation: flow-right 2.7s linear var(--pulse-delay) infinite both;
+  }
+
+  .group\/flow:hover .flow-pulse-down {
+    animation: flow-down 2.7s linear var(--pulse-delay) infinite both;
+  }
+}
+
+@keyframes flow-right {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  5%,
+  30% {
+    opacity: 1;
+  }
+  33.3%,
+  100% {
+    left: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+@keyframes flow-down {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  5%,
+  30% {
+    opacity: 1;
+  }
+  33.3%,
+  100% {
+    top: calc(100% - 7px);
+    opacity: 0;
+  }
+}
+
+/* Theme switch (components/ThemeToggle.tsx). The new theme grows out of the
+   button in a circle; the script animates the circle, and this turns off the
+   browser's default cross-fade so only the circle shows. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

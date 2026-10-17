@@ -16,7 +16,7 @@ export default function Section({
       aria-labelledby={`${id}-heading`}
       className="border-t border-line"
     >
-      <div className="mx-auto grid max-w-5xl gap-8 px-5 py-16 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-12 md:py-24">
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-12 md:py-24">
         <h2
           id={`${id}-heading`}
           className="self-start font-display text-3xl md:sticky md:top-24"

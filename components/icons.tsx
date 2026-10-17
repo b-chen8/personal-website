@@ -67,6 +67,14 @@ export function FileIcon({ className }: IconProps) {
   );
 }
 
+export function DownloadIcon({ className }: IconProps) {
+  return (
+    <StrokeIcon className={className}>
+      <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+    </StrokeIcon>
+  );
+}
+
 export function ExternalIcon({ className }: IconProps) {
   return (
     <StrokeIcon className={className}>

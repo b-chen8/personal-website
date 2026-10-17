@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { profile } from "@/data/content";
 import { FileIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./icons";
 import Section from "./Section";
@@ -54,15 +55,9 @@ export default function Contact() {
           </a>
         </li>
         <li>
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Resume (PDF, opens in a new tab)"
-            className={iconLink}
-          >
+          <Link href="/resume" aria-label="Resume" className={iconLink}>
             <FileIcon />
-          </a>
+          </Link>
         </li>
       </ul>
     </Section>

@@ -1,16 +1,8 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import {
-  DEGREES,
-  HEIGHT,
-  WIDTH,
-  curvePath,
-  taylorSin,
-  toX,
-  toY,
-} from "@/components/TaylorPlot";
 import { profile } from "@/data/content";
+import { plotter, taylorSin } from "@/lib/taylor";
 
 // The image shown when the site's link is shared (LinkedIn, iMessage, Slack).
 // Next.js runs this once at build time and serves the result as a PNG, so the
@@ -37,12 +29,19 @@ const [displayFont, bodyFont] = await Promise.all([
 ]);
 
 const colors = {
-  bg: "#131c1f",
-  line: "#2d3d42",
-  fg: "#e8edea",
-  muted: "#9db0ae",
-  accent: "#f2c866",
+  bg: "#0b1e33",
+  line: "#23415f",
+  fg: "#edf2f7",
+  muted: "#93a9c2",
+  accent: "#ffb84d",
 };
+
+// The hero plot in miniature: sin x, the degree-7 polynomial the hero settles
+// on, and the hatched error between them.
+const WIDTH = 520;
+const HEIGHT = 340;
+const plot = plotter({ width: WIDTH, height: HEIGHT, xRange: 2 * Math.PI, yRange: 2.4 });
+const polynomial = (x: number) => taylorSin(x, 7);
 
 const PLOT_WIDTH = px(400);
 
@@ -90,8 +89,8 @@ export default function Image() {
           </div>
         </div>
 
-        {/* The hero plot without its labels, which would be too small to read.
-            Stroke widths are in the plot's own 520x340 units. */}
+        {/* No labels, which would be too small to read. Stroke widths are in
+            the plot's own 520x340 units. */}
         <svg
           width={PLOT_WIDTH}
           height={Math.round((PLOT_WIDTH * HEIGHT) / WIDTH)}
@@ -99,35 +98,49 @@ export default function Image() {
         >
           <line
             x1={0}
-            y1={toY(0)}
+            y1={plot.toY(0)}
             x2={WIDTH}
-            y2={toY(0)}
+            y2={plot.toY(0)}
             stroke={colors.line}
             strokeWidth={2}
           />
           <line
-            x1={toX(0)}
+            x1={plot.toX(0)}
             y1={0}
-            x2={toX(0)}
+            x2={plot.toX(0)}
             y2={HEIGHT}
             stroke={colors.line}
             strokeWidth={2}
           />
-          {DEGREES.map((degree, i) => (
-            <path
-              key={degree}
-              d={curvePath((x) => taylorSin(x, degree))}
-              fill="none"
-              stroke={colors.muted}
-              strokeWidth={3.2}
-              strokeOpacity={0.7 + i * 0.075}
-            />
-          ))}
+          <defs>
+            <pattern
+              id="hatch"
+              width={12}
+              height={12}
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
+              <line x1={0} y1={0} x2={0} y2={12} stroke={colors.accent} strokeWidth={3} />
+            </pattern>
+          </defs>
           <path
-            d={curvePath(Math.sin)}
+            d={plot.between(Math.sin, polynomial)}
+            fill={colors.accent}
+            fillOpacity={0.08}
+          />
+          <path d={plot.between(Math.sin, polynomial)} fill="url(#hatch)" fillOpacity={0.7} />
+          <path
+            d={plot.curve(Math.sin)}
+            fill="none"
+            stroke={colors.fg}
+            strokeWidth={6}
+            strokeLinecap="round"
+          />
+          <path
+            d={plot.curve(polynomial)}
             fill="none"
             stroke={colors.accent}
-            strokeWidth={7}
+            strokeWidth={6}
             strokeLinecap="round"
           />
         </svg>
