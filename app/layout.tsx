@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Schibsted_Grotesk, STIX_Two_Text } from "next/font/google";
+import InspectToggle, { InspectBar } from "@/components/InspectToggle";
 import Nav from "@/components/Nav";
+import Source, { onContentEdge } from "@/components/Source";
 import { profile } from "@/data/content";
 import "./globals.css";
 
@@ -55,9 +57,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
-        <Nav name={profile.name} />
+        <Nav
+          name={profile.name}
+          tag={
+            <Source
+              file="components/Nav.tsx"
+              runs="client"
+              className="bottom-0 left-[max(0.75rem,calc((100%-72rem)/2+1.25rem))] translate-y-1/2"
+            />
+          }
+        />
         {children}
-        <footer className="border-t border-line">
+        <footer className="relative border-t border-line">
+          <Source file="app/layout.tsx" className={onContentEdge} />
           <p className="mx-auto max-w-6xl px-5 py-8 text-sm text-muted">
             © {profile.name}. Built with Next.js and Tailwind CSS.{" "}
             <a
@@ -69,9 +81,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               Read the source on GitHub
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
-            .
+            . <InspectToggle variant="text" />.
           </p>
         </footer>
+        <InspectBar />
       </body>
     </html>
   );

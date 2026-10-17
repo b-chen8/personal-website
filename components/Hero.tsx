@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { profile } from "@/data/content";
 import { primaryButton as primary, secondaryButton as secondary } from "./buttons";
 import { FileIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./icons";
+import Source from "./Source";
 import TaylorExplorer from "./TaylorExplorer";
 
 const icon = "h-[18px] w-[18px]";
@@ -12,8 +13,9 @@ export default function Hero() {
     <section
       id="top"
       aria-labelledby="hero-heading"
-      className="mx-auto max-w-6xl px-5 pb-20 pt-12 md:pb-24 md:pt-16"
+      className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 md:pb-24 md:pt-16"
     >
+      <Source file="components/Hero.tsx" className="left-5 top-3" />
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,29rem)] lg:items-end lg:gap-12">
         <div>
           <h1
@@ -69,7 +71,12 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="mt-14 md:mt-16">
+      <div className="relative mt-14 md:mt-16">
+        <Source
+          file="components/TaylorExplorer.tsx"
+          runs="client"
+          className="left-0 top-0 -translate-y-1/2"
+        />
         <TaylorExplorer />
       </div>
     </section>

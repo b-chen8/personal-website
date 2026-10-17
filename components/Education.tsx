@@ -3,7 +3,7 @@ import Section from "./Section";
 
 export default function Education() {
   return (
-    <Section id="education" title="Education">
+    <Section id="education" title="Education" file="components/Education.tsx">
       <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-4">
         <h3 className="font-display text-2xl">{education.school}</h3>
         <p className="text-sm text-muted">{education.period}</p>

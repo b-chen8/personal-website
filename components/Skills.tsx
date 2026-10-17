@@ -3,7 +3,7 @@ import Section from "./Section";
 
 export default function Skills() {
   return (
-    <Section id="skills" title="Skills">
+    <Section id="skills" title="Skills" file="components/Skills.tsx">
       <dl>
         {skills.map((group) => (
           <div

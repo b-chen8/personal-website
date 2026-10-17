@@ -75,6 +75,16 @@ export function DownloadIcon({ className }: IconProps) {
   );
 }
 
+// Corner marks around a crosshair, like a selection on a drawing.
+export function InspectIcon({ className }: IconProps) {
+  return (
+    <StrokeIcon className={className}>
+      <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />
+      <path d="M12 9v6M9 12h6" />
+    </StrokeIcon>
+  );
+}
+
 export function ExternalIcon({ className }: IconProps) {
   return (
     <StrokeIcon className={className}>

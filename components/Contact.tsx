@@ -8,7 +8,7 @@ const iconLink =
 
 export default function Contact() {
   return (
-    <Section id="contact" title="Contact">
+    <Section id="contact" title="Contact" file="components/Contact.tsx">
       <p className="max-w-[55ch] text-lg leading-relaxed">
         Email is the best way to reach me. I&apos;m looking for a software
         engineering internship for summer 2027 and happy to talk about any of

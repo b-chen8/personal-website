@@ -20,7 +20,7 @@ Then open http://localhost:3000. Run `npm run build` before pushing to catch err
 Everything the site says lives in [data/content.ts](data/content.ts). No component needs to change when the content does.
 
 - `profile`: name, the intro paragraph and short facts at the top of the page, email, and links. `tagline` is the page description and the text in the link-preview image.
-- `projects`: one entry per project, in the order shown. `github`, `demo` and `note` are optional; leave one out and it is not shown. `inProgress: true` adds an "In progress" label and introduces `details` as design decisions.
+- `projects`: one entry per project, in the order shown. `github`, `demo` and `note` are optional; leave one out and it is not shown. `inProgress: true` adds an "In progress" label and introduces `details` as design decisions. `simulator: "robot"` puts the Combat Toy simulator under that project's diagram; it expects Combat Toy's box ids.
 - `flow` (inside a project, optional): the diagram of how the project's parts connect. Each box has a column and a row, and each arrow names the two boxes it joins; the comments on `FlowNode` and `FlowEdge` explain the rules. On phones the diagram turns on its side automatically.
 - `education`: school, degree, GPA line and coursework.
 - `experience`: software-relevant jobs, with bullet points. `otherWork`: other jobs, one short line each.
@@ -46,13 +46,15 @@ To update the resume, replace `public/anonResume.pdf`. To use a file with a diff
 | `app/opengraph-image.tsx` | The image shown when the site's link is shared. Generated at build time from the name and tagline in `data/content.ts`, using the font files in `assets/fonts/`. |
 | `components/Nav.tsx` | Sticky nav with the Resume link and the mobile menu. Underlines the section you are reading. |
 | `components/ThemeToggle.tsx` | Switches `data-theme` on `<html>` and saves the choice in `localStorage`. Where the browser supports view transitions, the new theme spreads out from the button in a circle. |
-| `components/Section.tsx` | Layout shared by every section: title in a left margin, content beside it. |
+| `components/Section.tsx` | Layout shared by every section: title in a left margin, content beside it. Its `file` prop names the section's component for blueprint view. |
 | `components/Hero.tsx` | Name, intro, facts, and the Resume, GitHub, LinkedIn and Email buttons. |
 | `components/TaylorExplorer.tsx` | The hero figure: sin x and one of its Taylor polynomials, with the error hatched, a slider for the degree, and a tracer that reads out the error under the pointer. |
 | `lib/taylor.ts` | The math and SVG paths behind the hero figure and the link-preview image. |
 | `components/FlowDiagram.tsx` | Draws a project's `flow` as a grid of boxes and arrows. Hovering it sends dots along the arrows in the direction data moves. |
+| `components/RobotSimulator.tsx` | Combat Toy's simulator. The robot's Arduino sketch, ported to TypeScript function for function, drives a drawing of the robot, its sonar readout and its LCD, and lights up the project's diagram as it runs. |
+| `components/inspect.ts`, `InspectToggle.tsx`, `InspectTag.tsx`, `Source.tsx` | Blueprint view, switched on from the nav or the footer: outlines each component and labels it with its file, size, and whether it runs on the server or in the browser, linking to its code on GitHub. To label a new component, put `<Source file="components/Name.tsx" />` first inside its root element and make that element `relative`. The links point at the `main` branch. |
 | `components/ResumeViewer.tsx` | Shows the resume PDF with the browser's own viewer, or a link to it in browsers that can't (Chrome on Android). |
 | `components/Projects.tsx`, `Education.tsx`, `Experience.tsx`, `Skills.tsx`, `Contact.tsx` | One per section. Each reads from `data/content.ts`. |
 | `components/icons.tsx`, `buttons.ts` | The inline SVG icons, and the button styles the hero and resume page share. |
 
-Only `Nav.tsx`, `ThemeToggle.tsx`, `TaylorExplorer.tsx` and `ResumeViewer.tsx` run JavaScript in the browser. Everything else is rendered to static HTML at build time, and the hero figure is rendered there too, so the page is complete before any script loads.
+Only `Nav.tsx`, `ThemeToggle.tsx`, `TaylorExplorer.tsx`, `RobotSimulator.tsx`, `ResumeViewer.tsx` and the blueprint view's toggle and labels run JavaScript in the browser. Everything else is rendered to static HTML at build time, and the hero figure is rendered there too, so the page is complete before any script loads.

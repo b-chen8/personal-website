@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CloseIcon, FileIcon, MenuIcon } from "./icons";
+import InspectToggle from "./InspectToggle";
 import ThemeToggle from "./ThemeToggle";
 
 // Each href matches the id of a <Section> on the home page. The leading slash
@@ -16,7 +17,14 @@ const links = [
   { href: "/#contact", label: "Contact" },
 ];
 
-export default function Nav({ name }: { name: string }) {
+export default function Nav({
+  name,
+  tag,
+}: {
+  name: string;
+  // Its label in blueprint view (Source.tsx), from the server layout.
+  tag?: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const [reading, setReading] = useState<string | null>(null);
   const pathname = usePathname();
@@ -47,6 +55,7 @@ export default function Nav({ name }: { name: string }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/90 backdrop-blur">
+      {tag}
       <nav aria-label="Main" className="mx-auto max-w-6xl px-5">
         <div className="flex h-14 items-center justify-between gap-4">
           <Link href="/#top" className="font-display text-lg">
@@ -78,6 +87,7 @@ export default function Nav({ name }: { name: string }) {
               Resume
             </Link>
 
+            <InspectToggle variant="icon" />
             <ThemeToggle />
 
             <button

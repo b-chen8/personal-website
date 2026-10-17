@@ -247,3 +247,88 @@
   animation: none;
   mix-blend-mode: normal;
 }
+
+/* Boxes and arrows a demo is running (data-active, set by
+   components/RobotSimulator.tsx) light up, and their arrows carry a dot. */
+[data-flow-node] {
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+[data-flow-node][data-active] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+[data-flow-edge][data-active] .flow-arrow {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-flow-edge][data-active] .flow-pulse-right {
+    animation: flow-right 1.35s linear infinite both;
+  }
+
+  [data-flow-edge][data-active] .flow-pulse-down {
+    animation: flow-down 1.35s linear infinite both;
+  }
+}
+
+/* Combat Toy simulator (components/RobotSimulator.tsx). The joints glide to
+   each angle the sketch writes, about as fast as a hobby servo, and the body
+   glides with each step. A sonar ping is a pair of arcs that grow and fade.
+   With motion turned off, the robot jumps between poses instead. */
+@media (prefers-reduced-motion: no-preference) {
+  .robot-joint {
+    transition: transform 0.16s ease-out;
+  }
+
+  .robot-body {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .robot-ping {
+    animation: robot-ping 0.45s ease-out forwards;
+  }
+
+  .robot-buzz {
+    animation: robot-buzz 0.3s ease-in-out infinite alternate;
+  }
+}
+
+.robot-ping {
+  opacity: 0;
+}
+
+@keyframes robot-ping {
+  from {
+    opacity: 1;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+
+@keyframes robot-buzz {
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* Blueprint view (components/inspect.ts). Anything holding a component label
+   (InspectTag.tsx) gets a dashed outline, and the page turns to drafting
+   paper. The labels only exist while the view is on. */
+:has(> .inspect-tag) {
+  outline: 1.5px dashed color-mix(in srgb, var(--accent) 70%, transparent);
+  outline-offset: -1.5px;
+}
+
+html[data-inspect] body {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

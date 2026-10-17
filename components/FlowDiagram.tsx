@@ -1,4 +1,5 @@
 import type { FlowEdge, FlowNode } from "@/data/content";
+import Source from "./Source";
 
 // A project's flow diagram, laid out on a CSS grid.
 //
@@ -13,6 +14,10 @@ import type { FlowEdge, FlowNode } from "@/data/content";
 // Hovering a diagram sends a dot along each arrow (see .flow-pulse in
 // globals.css). Arrows leaving later columns start later, so the dots move
 // through the system in the order data does.
+//
+// Boxes and arrows carry their ids (data-flow-node="sonar",
+// data-flow-edge="sonar>pixy") so an interactive demo wrapped around the
+// diagram can light up the part it is running; see RobotSimulator.tsx.
 
 const placed =
   "[grid-row:var(--track)] [grid-column:var(--lanes)] lg:[grid-column:var(--track)] lg:[grid-row:var(--lanes)]";
@@ -34,7 +39,8 @@ function Arrow({
   delay: string;
 }) {
   const line = `border-current ${dashed ? "border-dashed" : ""}`;
-  const color = "text-muted transition-colors duration-300 group-hover/flow:text-accent";
+  const color =
+    "flow-arrow text-muted transition-colors duration-300 group-hover/flow:text-accent";
   const pulse = (
     <span
       className={`flow-pulse flow-pulse-${direction}`}
@@ -76,6 +82,7 @@ function Edge({
 
   return (
     <div
+      data-flow-edge={`${edge.from}>${edge.to}`}
       className={placed}
       style={place(`${2 * from.col} / ${2 * to.col - 1}`, `${top} / ${bottom + 1}`)}
     >
@@ -133,8 +140,9 @@ export default function FlowDiagram({
   return (
     <figure
       aria-label={label}
-      className="group/flow rounded-lg border border-line bg-surface p-4 sm:p-5 lg:p-6"
+      className="group/flow relative rounded-lg border border-line bg-surface p-4 sm:p-5 lg:p-6"
     >
+      <Source file="components/FlowDiagram.tsx" />
       <div
         className="grid gap-x-3 [grid-template-columns:var(--lanes-narrow)] [grid-template-rows:var(--tracks-narrow)] lg:gap-x-0 lg:gap-y-3 lg:[grid-template-columns:var(--tracks-wide)] lg:[grid-template-rows:var(--lanes-wide)]"
         style={
@@ -152,6 +160,7 @@ export default function FlowDiagram({
             return (
               <div
                 key={node.id}
+                data-flow-node={node.id}
                 className={`${placed} flex flex-col justify-center rounded-md border border-line bg-bg px-3.5 py-3`}
                 style={place(`${2 * node.col - 1}`, `${firstRow(node)} / ${lastRow(node) + 1}`)}
               >

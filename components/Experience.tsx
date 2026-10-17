@@ -3,7 +3,7 @@ import Section from "./Section";
 
 export default function Experience() {
   return (
-    <Section id="experience" title="Experience">
+    <Section id="experience" title="Experience" file="components/Experience.tsx">
       <ul className="space-y-12">
         {experience.map((job) => (
           <li key={`${job.role}-${job.organization}`}>

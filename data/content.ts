@@ -38,6 +38,12 @@ export type Project = {
   details: string[];
   /** Optional diagram of how the parts connect. */
   flow?: { nodes: FlowNode[]; edges: FlowEdge[] };
+  /**
+   * Optional interactive demo shown with the diagram. "robot" is the Combat
+   * Toy simulator in components/RobotSimulator.tsx, which expects that
+   * project's diagram ids.
+   */
+  simulator?: "robot";
   tech: string[];
   /** Leave out a link and its button is not shown. */
   github?: string;
@@ -224,6 +230,7 @@ export const projects: Project[] = [
       ],
     },
     tech: ["C", "C++", "Arduino", "PIXY Cam", "Ultrasonic sensors"],
+    simulator: "robot",
     github: "https://github.com/b-chen8/combat-robot",
     demo: "https://youtu.be/UbacsFBiEkQ",
   },

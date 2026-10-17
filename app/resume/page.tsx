@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { primaryButton } from "@/components/buttons";
 import { DownloadIcon } from "@/components/icons";
 import ResumeViewer from "@/components/ResumeViewer";
+import Source from "@/components/Source";
 import { profile } from "@/data/content";
 
 export const metadata: Metadata = {
@@ -17,7 +18,8 @@ export default function ResumePage() {
   const lookingFor = profile.facts[0];
 
   return (
-    <main id="main" className="mx-auto max-w-6xl px-5 pb-20 pt-12 md:pb-24 md:pt-16">
+    <main id="main" className="relative mx-auto max-w-6xl px-5 pb-20 pt-12 md:pb-24 md:pt-16">
+      <Source file="app/resume/page.tsx" className="left-5 top-3" />
       <div className="grid gap-10 lg:grid-cols-[15rem_minmax(0,51rem)] lg:gap-12">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <h1 className="font-display text-5xl leading-none tracking-tight md:text-6xl">
@@ -46,7 +48,10 @@ export default function ResumePage() {
           </dl>
         </div>
 
-        <ResumeViewer src={profile.resume} title={`${profile.name}'s resume`} />
+        <div className="relative">
+          <Source file="components/ResumeViewer.tsx" runs="client" />
+          <ResumeViewer src={profile.resume} title={`${profile.name}'s resume`} />
+        </div>
       </div>
     </main>
   );
