@@ -4,6 +4,7 @@ import InspectToggle, { InspectBar } from "@/components/InspectToggle";
 import Nav from "@/components/Nav";
 import Source, { onContentEdge } from "@/components/Source";
 import { profile } from "@/data/content";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const bodyFont = Schibsted_Grotesk({
@@ -17,14 +18,8 @@ const displayFont = STIX_Two_Text({
   style: ["normal", "italic"],
 });
 
-// The link-preview image (app/opengraph-image.tsx) needs an absolute URL.
-// Vercel provides the project's production domain at build time, so this
-// follows a domain change on the next deploy without any edit here.
-const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : "http://localhost:3000";
-
 export const metadata: Metadata = {
+  // The link-preview image (app/opengraph-image.tsx) needs an absolute URL.
   metadataBase: new URL(siteUrl),
   title: `${profile.name} | Software engineering student`,
   description: profile.tagline,

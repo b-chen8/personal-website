@@ -1,7 +1,9 @@
 import { projects } from "@/data/content";
+import FeedSimulator from "./FeedSimulator";
 import FlowDiagram from "./FlowDiagram";
 import { ExternalIcon, GitHubIcon } from "./icons";
 import RobotSimulator from "./RobotSimulator";
+import SchemaExplorer from "./SchemaExplorer";
 import Section from "./Section";
 import Source from "./Source";
 
@@ -20,6 +22,24 @@ export default function Projects() {
               label={`How the parts of ${project.title} connect`}
             />
           );
+          const demo =
+            project.simulator === "robot" ? (
+              <RobotSimulator
+                diagram={diagram}
+                tag={<Source file="components/RobotSimulator.tsx" runs="client" />}
+              />
+            ) : project.simulator === "feed" ? (
+              <FeedSimulator
+                diagram={diagram}
+                tag={<Source file="components/FeedSimulator.tsx" runs="client" />}
+              />
+            ) : project.simulator === "schema" ? (
+              <SchemaExplorer
+                tag={<Source file="components/SchemaExplorer.tsx" runs="client" />}
+              />
+            ) : (
+              diagram
+            );
           return (
             <li
               key={project.title}
@@ -47,18 +67,7 @@ export default function Projects() {
                   {project.summary}
                 </p>
 
-                {diagram && (
-                  <div className="mt-7">
-                    {project.simulator === "robot" ? (
-                      <RobotSimulator
-                        diagram={diagram}
-                        tag={<Source file="components/RobotSimulator.tsx" runs="client" />}
-                      />
-                    ) : (
-                      diagram
-                    )}
-                  </div>
-                )}
+                {demo && <div className="mt-7">{demo}</div>}
 
                 {project.inProgress && (
                   <p className="mt-7 text-[15px] text-muted">

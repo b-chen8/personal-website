@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { primaryButton, secondaryButton } from "./buttons";
+import { useLitDiagram } from "./useLitDiagram";
+import { useNarrow } from "./useNarrow";
 
 // A playable version of Combat Toy. The robot's Arduino sketch
 // (github.com/b-chen8/combat-robot) is ported in `sketch` below function for
@@ -54,17 +56,10 @@ const BLANK = " ".repeat(16);
 // Phones show about half the floor, and the view follows the robot like a
 // side-scroller, so the drawing stays big enough to read. The block is kept
 // within the view there.
-const NARROW = "(max-width: 639px)";
 const NARROW_VIEW = 600;
 // How much of the floor behind the robot stays in view, room for the buzzer.
 const NARROW_BEHIND = 160;
 const NARROW_REACH_CM = 52;
-
-function subscribeNarrow(onChange: () => void) {
-  const query = matchMedia(NARROW);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
 
 type Hardware = {
   delay(ms: number): Promise<void>;
@@ -271,22 +266,9 @@ export default function RobotSimulator({
   const run = useRef<AbortController | null>(null);
   const grab = useRef(0);
   const scope = useRef<HTMLDivElement>(null);
-  const narrow = useSyncExternalStore(
-    subscribeNarrow,
-    () => matchMedia(NARROW).matches,
-    () => false,
-  );
+  const narrow = useNarrow();
 
-  // Light up the diagram's boxes and arrows for the current stage.
-  useEffect(() => {
-    const lit = stage ? LIT[stage] : [];
-    scope.current
-      ?.querySelectorAll<HTMLElement>("[data-flow-node], [data-flow-edge]")
-      .forEach((element) => {
-        const id = element.dataset.flowNode ?? element.dataset.flowEdge ?? "";
-        element.toggleAttribute("data-active", lit.includes(id));
-      });
-  }, [stage]);
+  useLitDiagram(scope, stage ? LIT[stage] : []);
 
   useEffect(() => () => run.current?.abort(), []);
 

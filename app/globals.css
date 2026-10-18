@@ -5,7 +5,8 @@
 @custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 /* Color tokens. Dark is a blueprint: deep Prussian blue, white linework,
-   and amber for anything highlighted. */
+   and amber for anything highlighted. Danger marks what a demo shows going
+   wrong. */
 :root {
   color-scheme: dark;
   --bg: #0b1e33;
@@ -15,6 +16,7 @@
   --muted: #93a9c2;
   --accent: #ffb84d;
   --on-accent: #0b1e33;
+  --danger: #ff8a85;
 }
 
 /* Light is the same drawing printed on white: the blue becomes the ink, and
@@ -28,6 +30,7 @@
   --muted: #4b6079;
   --accent: #b35c00;
   --on-accent: #ffffff;
+  --danger: #c1272d;
 }
 
 /* Exposes the tokens to Tailwind as bg-bg, text-muted, border-line, etc. */
@@ -39,6 +42,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-stix), Georgia, "Times New Roman", serif;
 }
@@ -331,4 +335,18 @@ html[data-inspect] body {
     linear-gradient(color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--line) 55%, transparent) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* Nutrition Scanner demo (components/SchemaExplorer.tsx). A value that a
+   flipped decision gets wrong flashes once as it appears. */
+@media (prefers-reduced-motion: no-preference) {
+  .schema-flash {
+    animation: schema-flash 0.9s ease-out;
+  }
+}
+
+@keyframes schema-flash {
+  from {
+    background-color: color-mix(in srgb, var(--danger) 35%, transparent);
+  }
 }

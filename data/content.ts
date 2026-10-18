@@ -39,11 +39,13 @@ export type Project = {
   /** Optional diagram of how the parts connect. */
   flow?: { nodes: FlowNode[]; edges: FlowEdge[] };
   /**
-   * Optional interactive demo shown with the diagram. "robot" is the Combat
-   * Toy simulator in components/RobotSimulator.tsx, which expects that
-   * project's diagram ids.
+   * Optional interactive demo under the summary. "robot" is Combat Toy's
+   * simulator (RobotSimulator.tsx) and "feed" is PolyLens's live feed
+   * (FeedSimulator.tsx); both light up the project's diagram as they run and
+   * expect its ids. "schema" lets visitors flip Nutrition Scanner's design
+   * decisions (SchemaExplorer.tsx) and needs no diagram.
    */
-  simulator?: "robot";
+  simulator?: "robot" | "feed" | "schema";
   tech: string[];
   /** Leave out a link and its button is not shown. */
   github?: string;
@@ -159,6 +161,7 @@ export const projects: Project[] = [
       ],
     },
     tech: ["React", "TypeScript", "Express", "WebSocket"],
+    simulator: "feed",
     github: "https://github.com/b-chen8/Yhack2026",
   },
   {
@@ -180,6 +183,7 @@ export const projects: Project[] = [
       "Vercel",
       "Open Food Facts API",
     ],
+    simulator: "schema",
     // Add github: "..." and demo: "..." here once the repo and site are public.
   },
   {
